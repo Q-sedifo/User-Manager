@@ -1,0 +1,52 @@
+body{
+  margin-top:20px;
+  background:#f8f8f8
+}
+.active-circle {
+  color: green;
+}
+.not-active-circle {
+  color: grey;
+}
+
+/* Switch ckechbox */
+input.switch[type="checkbox"] {
+  width: 40px;
+  height: 18px;
+  border-radius: 20px;
+  outline: none;
+  background-color: #939393;
+  appearance: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: .5s;
+}
+
+input.switch:checked[type="checkbox"] {
+  background-color: #9da4da;
+}
+
+input.switch:checked[type="checkbox"]:before {
+  transform: translateX(100%) scale(1.2);
+  background-color: #4b58ab;
+}
+
+input.switch[type="checkbox"]:before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: inherit;
+  transition: inherit;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+  transform: scale(1.2);
+}
+
+.error {
+  background-color: rgb(255, 68, 68);
+  border-radius: 5px;
+  padding: 5px;
+  color: white;
+}
+
