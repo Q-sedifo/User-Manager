@@ -63,6 +63,14 @@ if (!empty($_POST)) {
         $response['status'] = true;
         $userId = $_POST['id'];
 
+        // Checking user exists
+        if (!UserValidator::userExists($userId)) {
+            $response['status'] = false;
+            $response['error']['message'] = 'This user does not exist';
+            echo json_encode($response);
+            exit();
+        } 
+
         $form = new UserValidator($_POST);
         if ($form->checkError()) {
             $sql = "UPDATE users SET `firstName` = ?, `lastName` = ?, `role` = ?, `status` = ? WHERE id = ?";
@@ -71,8 +79,7 @@ if (!empty($_POST)) {
             ]);
 
             // Return edited user
-            $query = $DB->query("SELECT * FROM `users` WHERE id = $userId");
-            $response['user'] = $query->fetch(PDO::FETCH_OBJ);
+            $response['user'] = UserValidator::getUser($userId);
             echo json_encode($response);
             exit();
         }

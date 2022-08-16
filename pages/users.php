@@ -57,7 +57,7 @@
                             <td class="text-center align-middle"><i class="fa fa-circle <?php if ($user->status): ?> active-circle <?php else: ?> not-active-circle <?php endif ?>"></i></td>
                             <td class="text-center align-middle">
                               <div class="btn-group align-top">
-                                <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-type="edit"
+                                <button class="btn btn-sm btn-outline-secondary badge edit-user-btn" type="button" data-toggle="modal" data-type="edit"
                                   data-target="#user-form-modal" data-userid="<?= $user->id ?>">
                                   Edit
                                 </button>
@@ -154,11 +154,11 @@
                     <option value="1">Admin</option>
                   </select>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Save</button>
-                </div>
               </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button id="save-btn" type="button" class="btn btn-primary">Save</button>
             </div>
           </div>
         </div>
