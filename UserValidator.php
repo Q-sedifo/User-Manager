@@ -65,5 +65,22 @@ class UserValidator {
         }
         return $post;
     }
+
+    public static function userExists($id) {
+        global $DB;
+        $query = $DB->query("SELECT * FROM `users` WHERE id = $id");
+        $user = $query->fetchAll(PDO::FETCH_OBJ);
+
+        if ($user) return true;
+        return false;
+    }
+
+    public static function getUser($id) {
+        global $DB;
+        $query = $DB->query("SELECT * FROM `users` WHERE id = $id");
+        $user = $query->fetch(PDO::FETCH_OBJ);
+
+        return $user;
+    }
 }
 
