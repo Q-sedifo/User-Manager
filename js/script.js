@@ -70,7 +70,7 @@ $(document).ready(function () {
 
     // Checking for empty checkboxes
     if (checkboxes.length <= 0) {
-      showWarningu('No users selected');
+      showWarning('No users selected');
       return;
     }
     // Checking for selected action
