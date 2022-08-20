@@ -2,7 +2,7 @@
 
 // Getting user data by (user) id
 const getUserData = (userId) => {
-    return $(`#row-user-${userId}`).data();
+    return document.querySelector(`#row-user-${userId}`).dataset;
 }
 
 const deleteUser = (id) => {

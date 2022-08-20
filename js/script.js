@@ -37,23 +37,30 @@ $(document).ready(function () {
     $('#all-items').prop('checked', false);
   });
 
-  // Deleting one user with confirmation
-  $('#deleteUserConfirmationModal').one('show.bs.modal', function (event) {
-    const modalConfirmation = $(this);
+  // Deleting user with confirmation
+  const deleteUserConfirmation = $('#deleteUserConfirmationModal');
+
+  deleteUserConfirmation.on('show.bs.modal', function(event) {
     const userId = $(event.relatedTarget).data('userid');
     const userData = getUserData(userId);
 
-    modalConfirmation.find('.modal-body').text(`Do you really want to delete ${userData['firstname']} ${userData['lastname']}?`);
+    tmpData.id = userId;
 
-    modalConfirmation.find('#confirm').click(() => {
+    $(this).find('.modal-body').text(`
+      Do you really want to delete ${userData['firstname']} ${userData['lastname']}?
+    `);
+  })
 
-      $.ajax({
-        url: 'server.php',
-        type: 'POST',
-        data: { usersId: [userId], action: 'delete' },
-        success: () => deleteUser(userId)
-      })
-
+  deleteUserConfirmation.find('button.confirm').on('click', function(event) {
+    const userId = tmpData.id;
+    
+    $.ajax({
+      url: 'server.php',
+      type: 'POST',
+      data: { usersId: [userId], action: 'delete' }
+    })
+    .done(() => {
+      deleteUser(userId)
     })
   })
 
@@ -82,8 +89,9 @@ $(document).ready(function () {
     $.ajax({
       url: 'server.php',
       type: 'POST',
-      data: { usersId: checkboxes, action: action },
-      success: () => {
+      data: { usersId: checkboxes, action: action }
+    })
+    .done(() => {
         $('input:checkbox').prop('checked', false);
         switch (action) {
           case 'delete':
@@ -97,90 +105,75 @@ $(document).ready(function () {
             break;
           default: return;
         }
-      }
     })
   })
 
   // Add and edite user form
   $('#user-form-modal').on('show.bs.modal', function (event) {
-    tmpData.id = $(event.relatedTarget).data('userid');
-    tmpData.action = $(event.relatedTarget).data('type');
+    const modal = $('#user-form-modal');
+    const target = $(event.relatedTarget);
+    const userId = target.data('userid')
+    const action = target.data('type');
 
-    const modal = $(this);
-    const form = modal.find('form');
-    const data = getUserData(tmpData.id);
-    const switchStatus = $(this).find('.switch');
-    
+    tmpData.action = action;
+
     // Cleaning form
     modal.find('.error-place').html('');
     modal.find('form')[0].reset();
-
-    switch (tmpData.action) {
-      case 'edit':
-        modal.find('#UserModalLabel').text('Edit user');
-        modal.find('#first-name').val(data['firstname']);
-        modal.find('#last-name').val(data['lastname']);
-
-        if (data['status']) {
-          switchStatus.prop('checked', true);
-        }
-        else switchStatus.prop('checked', false);
-
-        if (data['role']) {
-          modal.find('#role option[value="1"]').prop('selected', true);
-        }
-
-        break;
+    
+    
+    switch (action) {
       case 'add':
         modal.find('#UserModalLabel').text('Add user');
         break;
-      default: return;
+      case 'edit':
+        const userData = getUserData(userId);
+
+        tmpData.id = userId;
+        
+        modal.find('#UserModalLabel').text('Edit user');
+        modal.find('#first-name').val(userData['firstname']);
+        modal.find('#last-name').val(userData['lastname']);
+
+        if (+userData['status']) modal.find('input#switch').prop('checked', true);
+        if (+userData['role']) modal.find('#role option[value="1"]').prop('selected', true);
+        
+        break; 
     }
+    
+  })
 
-    // Getting data from form after submiting
-    modal.find('#save-btn').click(function (e) {
+  $('#save-btn').on('click', function(event) {
+    const form = $('#user-form-modal').find('form');
+    const userData = collectFormData(form);
+
+    userData['id'] = tmpData.id;
+    userData['action'] = tmpData.action;
+
+    $.ajax({
+      url: 'server.php',
+      type: 'POST',
+      data: userData
+    })
+    .done((data) => {
+      const response = JSON.parse(data);
       
-      e.stopImmediatePropagation();
-
-      // Collecting data from form
-      const data = collectFormData(form);
-      const status = form.find('.switch').is(':checked') ? 1 : 0;
-
-      $.ajax({
-        url: 'server.php',
-        type: 'POST',
-        data: { 
-          id: tmpData.id,
-          firstName: data['firstName'],
-          lastName: data['lastName'],
-          status: status,
-          role: data['role'],
-          action: tmpData.action
-        },
-        cache: false,
-        success: (data) => {
-          const response = JSON.parse(data);
-
-          if (!response['status']) {
-            modal.find('.error-place').html(`<div class="error">${response['error']['message']}</div>`);
-            return;
-          }
-
-          $("#user-form-modal [data-dismiss=modal]").trigger({ type: "click" });
-
-          switch (tmpData.action) {
-            case 'edit':
-              editUser(response['user']['id'], response['user']);
-              break;
-            case 'add':
-              addUser(response['user']);
-              break;
-            default: return;
-          }
+      if (response['status']) {
+        switch (tmpData.action) {
+          case 'add':
+            addUser(response['user']);
+            break;
+          case'edit':
+            editUser(response['user']['id'], response['user']);
+            break;
         }
-      })
+        // Close modal window if success
+        $("#user-form-modal [data-dismiss=modal]").trigger({ type: "click" });
+        return
+      } 
 
-    });
+      $('#user-form-modal').find('.error-place').html(`<div class="error">${response['error']['message']}</div>`);
+    })
   })
 
 })

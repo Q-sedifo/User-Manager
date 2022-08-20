@@ -81,7 +81,7 @@
         </div>
 
         <!-- Delete user confirmation modal -->
-        <div class="modal fade" id="deleteUserConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteUserConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserConfirmationModal" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -95,14 +95,14 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="confirm" type="button" class="btn btn-primary" class="close" data-dismiss="modal" aria-label="Close">Confirm</button>
+                <button type="button" class="btn btn-primary confirm" class="close" data-dismiss="modal" aria-label="Close">Confirm</button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Warning modal -->
-        <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warning-modal" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -144,8 +144,8 @@
                   <input type="text" class="form-control" id="last-name" name="lastName">
                 </div>
                 <div>
-                  <label for="last-name" class="col-form-label">Status:</label>
-                  <div><input type="checkbox" class="switch" value="1" name="status"></div>
+                  <label class="col-form-label">Status:</label>
+                  <div><input id="switch" type="checkbox" class="switch" value="1" name="status"></div>
                 </div>
                 <div class="form-group">
                   <label for="role" class="col-form-label">Role:</label>
