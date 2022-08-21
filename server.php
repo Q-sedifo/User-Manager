@@ -4,38 +4,58 @@ require_once 'db.php';
 require_once 'UserValidator.php';
 
 if (!empty($_POST)) {
-    $usersId = $_POST['usersId'];
+    $response['status'] = true;
 
-    // Deleting users
-    if ($_POST['action'] == 'delete') {
+    if ($_POST['action'] == 'activate' || $_POST['action'] == 'deactivate' || $_POST['action'] == 'delete') {
+        $usersId = $_POST['usersId'];
 
+        // Checking for users existing
         foreach ($usersId as $id) {
-            $sql = "DELETE FROM users WHERE id = ?";
-            $DB->prepare($sql)->execute([$id]);
+            if (!UserValidator::userExists($id)) {
+                $response['status'] = false;
+                $response['error']['message'] = 'Some users do not exist'; 
+                echo json_encode($response);
+                exit();
+            }
         }
-    }
 
-    // Activate users
-    if ($_POST['action'] == 'activate') {
+        // Deleting users
+        if ($_POST['action'] == 'delete') {
 
-        foreach ($usersId as $id) {
-            $sql = "UPDATE users SET `status` = 1 WHERE id IN (?)";
-            $DB->prepare($sql)->execute([$id]);
+            foreach ($usersId as $id) {
+
+                $sql = "DELETE FROM users WHERE id = ?";
+                $DB->prepare($sql)->execute([$id]);
+            }
         }
-    }
 
-    // Deactivate users
-    if ($_POST['action'] == 'deactivate') {
+        // Activate users
+        if ($_POST['action'] == 'activate') {
 
-        foreach ($usersId as $id) {
-            $sql = "UPDATE users SET `status` = 0 WHERE id IN (?)";
-            $DB->prepare($sql)->execute([$id]);
+            foreach ($usersId as $id) {
+
+                $sql = "UPDATE users SET `status` = 1 WHERE id IN (?)";
+                $DB->prepare($sql)->execute([$id]);
+            }
         }
+
+        // Deactivate users
+        if ($_POST['action'] == 'deactivate') {
+
+            foreach ($usersId as $id) {
+
+                $sql = "UPDATE users SET `status` = 0 WHERE id IN (?)";
+                $DB->prepare($sql)->execute([$id]);
+            }
+        }
+
+        // Reply for request
+        echo json_encode($response);
+        exit();
     }
 
     // Adding user
     if ($_POST['action'] == 'add') {
-        $response['status'] = true;
         $name = $_POST['firstName'];
 
         $form = new UserValidator($_POST);
@@ -60,7 +80,6 @@ if (!empty($_POST)) {
 
     // Editing user
     if ($_POST['action'] == 'edit') {
-        $response['status'] = true;
         $userId = $_POST['id'];
 
         // Checking user exists

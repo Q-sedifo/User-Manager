@@ -71,7 +71,8 @@ $(document).ready(function () {
     const action = $(this).find('.form-user-action').val();
 
     const checkboxes = [];
-    $('input:checkbox:checked').each(function () {
+    // $('input:checkbox:checked').each(function () {
+    $('#user-table .check-box:checked').each(function () {
       checkboxes.push($(this).data('userid'));
     });
 
@@ -91,7 +92,14 @@ $(document).ready(function () {
       type: 'POST',
       data: { usersId: checkboxes, action: action }
     })
-    .done(() => {
+    .done((data) => {
+        const response = JSON.parse(data);
+        
+        if (!response['status']) {
+          showWarning(response['error']['message']);
+          return;
+        }
+
         $('input:checkbox').prop('checked', false);
         switch (action) {
           case 'delete':
@@ -162,6 +170,7 @@ $(document).ready(function () {
       if (response['status']) {
         switch (tmpData.action) {
           case 'add':
+            $('#all-items').prop('checked', false);
             addUser(response['user']);
             break;
           case'edit':
