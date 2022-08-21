@@ -4,7 +4,7 @@ import showWarning from './modules/warning.js'
 
 $(document).ready(function () {
 
-  // Save user id 
+  // Tmp user data
   const tmpData = {
     id: null,
     action: null
@@ -20,7 +20,7 @@ $(document).ready(function () {
     $('.check-box').prop('checked', false);
   });
 
-  $('.check-box').click(function () {
+  $('#user-table').on('click', '.check-box', function () {
     let allSelected = true;
 
     $('.check-box').each(function() {
@@ -156,6 +156,7 @@ $(document).ready(function () {
       data: userData
     })
     .done((data) => {
+      // $('input:checkbox').prop('checked', false);
       const response = JSON.parse(data);
       
       if (response['status']) {
