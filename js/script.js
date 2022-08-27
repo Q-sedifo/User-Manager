@@ -12,12 +12,7 @@ $(document).ready(function () {
 
   // Activate all ckeckboxes
   $('#all-items').click(function () {
-    if ($(this).is(':checked')) {
-      $('.check-box').prop('checked', true);
-      return;
-    } 
-
-    $('.check-box').prop('checked', false);
+    $('.check-box').prop('checked', $(this).prop('checked'));
   });
 
   $('#user-table').on('click', '.check-box', function () {

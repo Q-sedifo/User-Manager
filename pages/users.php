@@ -53,8 +53,8 @@
                               </div>
                             </td>
                             <td class="text-nowrap align-middle"><?= $user->firstName; ?> <?= $user->lastName ?></td>
-                            <td class="text-nowrap align-middle"><span><?php if ($user->role): ?> Admin <?php else: ?> User <?php endif ?></span></td>
-                            <td class="text-center align-middle"><i class="fa fa-circle <?php if ($user->status): ?> active-circle <?php else: ?> not-active-circle <?php endif ?>"></i></td>
+                            <td class="text-nowrap align-middle"><span><?= $roles[$user->role]; ?></span></td>
+                            <td class="text-center align-middle"><i class="fa fa-circle <?php if ($user->status): ?> active-circle <?php endif ?>"></i></td>
                             <td class="text-center align-middle">
                               <div class="btn-group align-top">
                                 <button class="btn btn-sm btn-outline-secondary badge edit-user-btn" type="button" data-toggle="modal" data-type="edit"

@@ -12,7 +12,6 @@ const deleteUser = (id) => {
 const activateUser = (id) => {
     const userRow = $(`#row-user-${id}`);
     const status = userRow.find('.fa-circle');
-    status.removeClass('not-active-circle');
     status.addClass('active-circle');
     userRow.attr('data-status', 1);
 }
@@ -21,13 +20,12 @@ const deactivateUser = (id) => {
     const userRow = $(`#row-user-${id}`);
     const status = userRow.find('.fa-circle');
     status.removeClass('active-circle');
-    status.addClass('not-active-circle');
     userRow.attr('data-status', 0);
 }
 
 const editUser = (id, user) => {
     const role = +user['role'] ? 'Admin' : 'User';
-    const status = +user['status'] ? 'active-circle' : 'not-active-circle';
+    const status = +user['status'] ? 'active-circle' : '';
 
     $('#row-user-' + id).replaceWith(`
         <tr id="row-user-${id}" data-id="${id}" data-firstname="${user['firstName']}" data-lastname="${user['lastName']}" data-role="${user['role']}" data-status="${user['status']}">
@@ -59,7 +57,7 @@ const editUser = (id, user) => {
 
 const addUser = (user) => {
     const role = +user['role'] ? 'Admin' : 'User';
-    const status = +user['status'] ? 'active-circle' : 'not-active-circle';
+    const status = +user['status'] ? 'active-circle' : '';
 
     $('#user-table-body').append(`
         <tr id="row-user-${user['id']}" data-id="${user['id']}" data-firstname="${user['firstName']}" data-lastname="${user['lastName']}" data-role="${user['role']}" data-status="${user['status']}">

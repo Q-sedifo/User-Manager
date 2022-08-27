@@ -2,11 +2,13 @@ body{
   margin-top:20px;
   background:#f8f8f8
 }
+
+.fa-circle {
+  color: grey;
+}
+
 .active-circle {
   color: green;
-}
-.not-active-circle {
-  color: grey;
 }
 
 /* Switch ckechbox */
